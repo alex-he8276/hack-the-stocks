@@ -11,9 +11,11 @@ var db *gorm.DB
 
 type Stock struct {
 	// gorm.Model
-	Ticker    string    `gorm:""json:"ticker"`
-	Date      time.Time `json:"date"`
-	Sentiment float64   `json:"sentiment"`
+	Ticker                string    `gorm:""json:"ticker"`
+	Date                  time.Time `json:"date"`
+	Sentiment             float64   `json:"sentiment"`
+	TweetExample          string    `json:"tweet_example"`
+	ClassificationExample string    `json:"classification_example"`
 }
 
 func init() {
