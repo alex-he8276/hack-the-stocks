@@ -147,7 +147,7 @@ proto.happystock.happystockapi.stockSentiment.toObject = function(includeInstanc
     date: (f = msg.getDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     sentiment: jspb.Message.getFieldWithDefault(msg, 3, 0),
     tweetexample: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    tweetsentiment: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    classificationexample: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -202,8 +202,8 @@ proto.happystock.happystockapi.stockSentiment.deserializeBinaryFromReader = func
       msg.setTweetexample(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setTweetsentiment(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setClassificationexample(value);
       break;
     default:
       reader.skipField();
@@ -263,9 +263,9 @@ proto.happystock.happystockapi.stockSentiment.serializeBinaryToWriter = function
       f
     );
   }
-  f = message.getTweetsentiment();
-  if (f !== 0) {
-    writer.writeInt32(
+  f = message.getClassificationexample();
+  if (f.length > 0) {
+    writer.writeString(
       5,
       f
     );
@@ -365,20 +365,20 @@ proto.happystock.happystockapi.stockSentiment.prototype.setTweetexample = functi
 
 
 /**
- * optional int32 tweetSentiment = 5;
- * @return {number}
+ * optional string classificationExample = 5;
+ * @return {string}
  */
-proto.happystock.happystockapi.stockSentiment.prototype.getTweetsentiment = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+proto.happystock.happystockapi.stockSentiment.prototype.getClassificationexample = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.happystock.happystockapi.stockSentiment} returns this
  */
-proto.happystock.happystockapi.stockSentiment.prototype.setTweetsentiment = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+proto.happystock.happystockapi.stockSentiment.prototype.setClassificationexample = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 

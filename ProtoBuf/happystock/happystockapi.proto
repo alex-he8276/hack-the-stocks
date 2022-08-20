@@ -9,7 +9,7 @@ message stockSentiment {
     google.protobuf.Timestamp date = 2;
     int32 sentiment = 3;
     string tweetExample = 4;
-    int32 tweetSentiment = 5;
+    string classificationExample = 5;
 }
 
 message stockPrice {
