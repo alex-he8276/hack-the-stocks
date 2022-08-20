@@ -213,9 +213,9 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 
 				var classificationExample string
 				if cohereResponse.Classifications[0].Prediction == "1" {
-					classificationExample = "positive"
+					classificationExample = "Positive"
 				} else {
-					classificationExample = "negative"
+					classificationExample = "Negative"
 				}
 				stock = &models.Stock{
 					Ticker:                ticker,
