@@ -80,22 +80,22 @@ var examples = []cohere.Example{
 }
 
 type TwitterResult struct {
-	Tweets []Tweet `json:"data"`
-	TweetUsers Users `json:includes`
+	Tweets     []Tweet `json:"data"`
+	TweetUsers Users   `json:includes`
 }
 
 type Tweet struct {
-	AuthorID string `json:author_id`
-	ID   string `json:"id"`
-	Text string `json:"text"`
+	AuthorID     string      `json:author_id`
+	ID           string      `json:"id"`
+	Text         string      `json:"text"`
 	TweetMetrics TweetMetric `json:public_metrics`
 }
 
 type TweetMetric struct {
 	RetweetCount string `retweet_count`
-	ReplyCount string `reply_count`
-	LikeCount string `like_count`
-	QuoteCount string `quote_count`
+	ReplyCount   string `reply_count`
+	LikeCount    string `like_count`
+	QuoteCount   string `quote_count`
 }
 
 type Users struct {
@@ -103,13 +103,13 @@ type Users struct {
 }
 
 type User struct {
-	ID   string `json:"id"`
+	ID          string     `json:"id"`
 	UserMetrics UserMetric `json:public_metrics`
 }
 
 type UserMetric struct {
-	FollowersCount   int `json:"followers_count"`
-	FollowingCount   int `json:"following_count"`
+	FollowersCount int `json:"followers_count"`
+	FollowingCount int `json:"following_count"`
 }
 
 func checkDatabase(ticker string, date time.Time) (*models.Stock, bool) {
@@ -148,7 +148,7 @@ func classify(ticker string, date time.Time, tweets []string) *cohere.ClassifyRe
 	}
 
 	response, err := co.Classify(cohere.ClassifyOptions{
-		Model:           "medium",
+		Model:           config.COHERE_MODEL_ID,
 		OutputIndicator: "Classify this tweet about a stock",
 		TaskDescription: "Classify these tweets about a stock as positive, negative or neutral",
 		Inputs:          tweets,
@@ -166,7 +166,6 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	ticker := vars["ticker"]
 	stockSentiments := &pb.ListStockSentiment{}
-	
 
 	workersWG := sync.WaitGroup{}
 	for i := 0; i < numDays; i++ {
@@ -204,26 +203,25 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 					Date:      date,
 					Sentiment: sentiment,
 				}
-				
+
 				// save to database
 				_ = stock.CreateStock()
 			}
 			//Append stock to result
 			stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
-			Name:      (*stock).Ticker,
-			Date:      timestamppb.New((*stock).Date),
-			Sentiment: int32((*stock).Sentiment),
+				Name:      (*stock).Ticker,
+				Date:      timestamppb.New((*stock).Date),
+				Sentiment: int32((*stock).Sentiment),
 			})
 
 		}(i)
 	}
 	workersWG.Wait()
-	// w.Write([]byte(fmt.Sprintf("%s", ticker)))
 
 	res, err := proto.Marshal(stockSentiments)
-	// res, err := json.Marshal(result)
 	if err != nil {
 		fmt.Printf("error: %v", err)
 	}
+
 	w.Write(res)
 }
