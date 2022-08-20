@@ -11,10 +11,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState(false);
   const [stockPriceData, setStockPriceData] = useState([]);
+  const [sentimentData, setSentimentData] = useState([]);
   const [ticker, setTicker] = useState("")
   const [companyName, setCompanyName] = useState("")
+  const [graphLabel, setGraphLabel] = useState("")
 
-  const hitApi = (ticker) => {
+  const hitStockApi = (ticker) => {
     const apiUrl = `http://127.0.0.1:5000/stock_price?ticker=${ticker}`;
     fetch(apiUrl)
       .then((response) => response.arrayBuffer())
@@ -29,7 +31,7 @@ function App() {
         });
         const result = [];
         result.push({
-          id: ticker,
+          id: "Stock Price",
           data: myData,
         });
         setStockPriceData(result);
@@ -37,12 +39,40 @@ function App() {
       });
   };
 
+  const hitSentimentApi = (ticker) => {
+    /* placeholder */
+    const apiUrl = `http://127.0.0.1:5000/stock_price?ticker=TSLA`;
+    fetch(apiUrl)
+      .then((response) => response.arrayBuffer())
+      .then((data) => {
+        let myData = happystockapi.listStockPrice.deserializeBinary(data);
+        let dataObj = myData.toObject();
+        myData = dataObj.pricelistList.map((item) => {
+          return {
+            x: new Date(item.date.seconds * 1000).toLocaleDateString("en-US"),
+            y: item.price,
+          };
+        });
+        const result = [];
+        result.push({
+          id: "Sentiment",
+          data: myData,
+        });
+        setSentimentData(result);
+        setLoading(false);
+      });
+  }
+
   const buttonClick = () => {
-    setLoading(true);
-    setSearch(true);
-    setStockPriceData([]);
-    console.log(ticker)
-    hitApi(ticker);
+    if(companyName !== graphLabel && ticker) {
+      setLoading(true);
+      setSearch(true);
+      setStockPriceData([]);
+      setGraphLabel(companyName);
+      console.log(ticker)
+      hitStockApi(ticker);
+      hitSentimentApi(ticker)
+    }
   };
 
   return (
@@ -55,15 +85,17 @@ function App() {
             </h1>
           </div>
           <div className="mt-5 2xl:mt-7 flex space-x-2">
-            <Search value={ticker} inputValue={companyName} setValue={setTicker} setInputValue={setCompanyName}/>
+            <Search setValue={setTicker} setInputValue={setCompanyName}/>
             <Button onClick={buttonClick}>
               Search <SearchIcon />
             </Button>
           </div>
           {loading ? (
             <>pog</>
-          ) : search ? (
-            <Graph className="h-28" data={stockPriceData} />
+          ) : search ? (<>
+          
+            <Graph data={stockPriceData} sentiment={sentimentData} stockName={graphLabel}/>
+            </>
           ) : (
             <></>
           )}
