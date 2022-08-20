@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	numDays          = 3
+	numDays          = 7
 	numTweetsPerDay  = 10
 	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22"
 
@@ -136,17 +136,11 @@ func retrieveTweets(ticker string, date time.Time) TwitterResult {
 	twitterResponse := TwitterResult{}
 	utils.ParseBody(resp, &twitterResponse)
 
-	// TODO: Filter Tweet Creator by Followers
 	fmt.Println(twitterResponse)
 	return twitterResponse
 }
 
-func classify(ticker string, date time.Time, tweets []string) *cohere.ClassifyResponse {
-	co, err := cohere.CreateClient(config.COHERE_API_KEY)
-	if err != nil {
-		fmt.Println(err)
-	}
-
+func classify(co *cohere.Client, ticker string, date time.Time, tweets []string) *cohere.ClassifyResponse {
 	response, err := co.Classify(cohere.ClassifyOptions{
 		Model:           config.COHERE_MODEL_ID,
 		OutputIndicator: "Classify this tweet about a stock",
@@ -188,12 +182,14 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				for _, tweet := range twitterResponse.Tweets {
 					tweets = append(tweets, tweet.Text)
 				}
+
 				// classify sentiment
-				cohereResponse := classify(ticker, date, tweets)
+				co := config.GetCohereClient()
+				cohereResponse := classify(co, ticker, date, tweets)
 				sentiment := 0.0
 				for _, classification := range cohereResponse.Classifications {
 					fmt.Println(classification.Input, classification.Prediction)
-					if classification.Prediction == "positive" {
+					if classification.Prediction == "1" {
 						sentiment += 1
 					}
 				}
