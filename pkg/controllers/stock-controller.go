@@ -81,30 +81,30 @@ var examples = []cohere.Example{
 
 type TwitterResult struct {
 	Tweets     []Tweet `json:"data"`
-	TweetUsers Users   `json:includes`
+	TweetUsers Users   `json:"includes"`
 }
 
 type Tweet struct {
-	AuthorID     string      `json:author_id`
+	AuthorID     string      `json:"author_id"`
 	ID           string      `json:"id"`
 	Text         string      `json:"text"`
-	TweetMetrics TweetMetric `json:public_metrics`
+	TweetMetrics TweetMetric `json:"public_metrics"`
 }
 
 type TweetMetric struct {
-	RetweetCount string `retweet_count`
-	ReplyCount   string `reply_count`
-	LikeCount    string `like_count`
-	QuoteCount   string `quote_count`
+	RetweetCount string `json:"retweet_count"`
+	ReplyCount   string `json:"reply_count"`
+	LikeCount    string `json:"like_count"`
+	QuoteCount   string `json:"quote_count"`
 }
 
 type Users struct {
-	Users []User `json:users`
+	Users []User `json:"users"`
 }
 
 type User struct {
 	ID          string     `json:"id"`
-	UserMetrics UserMetric `json:public_metrics`
+	UserMetrics UserMetric `json:"public_metrics"`
 }
 
 type UserMetric struct {
