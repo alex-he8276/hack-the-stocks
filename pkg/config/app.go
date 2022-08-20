@@ -24,15 +24,3 @@ func ConnectDB() {
 func GetDB() *gorm.DB {
 	return db
 }
-
-func ConnectCohere() {
-	var err error
-	co, err = cohere.CreateClient(COHERE_API_KEY)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func GetCohereClient() *cohere.Client {
-	return co
-}

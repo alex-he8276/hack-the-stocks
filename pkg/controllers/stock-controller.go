@@ -187,7 +187,10 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				}
 
 				// classify sentiment
-				co := config.GetCohereClient()
+				co, err := cohere.CreateClient(config.COHERE_API_KEY)
+				if err != nil {
+					fmt.Println(err)
+				}
 				cohereResponse := classify(co, ticker, date, tweets)
 				sentiment := 0.0
 				for _, classification := range cohereResponse.Classifications {
