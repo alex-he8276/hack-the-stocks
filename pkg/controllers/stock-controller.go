@@ -133,10 +133,7 @@ func retrieveTweets(ticker string, date time.Time) TwitterResult {
 		log.Fatal("failed retreiving tweets", err)
 	}
 	defer resp.Body.Close()
-
-	fmt.Println(url)
 	twitterResponse := TwitterResult{}
-	fmt.Println(resp)
 	utils.ParseBody(resp, &twitterResponse)
 
 	// TODO: Filter Tweet Creator by Followers
@@ -201,9 +198,7 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 						sentiment += 1
 					}
 				}
-				fmt.Println(sentiment, ticker)
 				sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
-				fmt.Println(sentiment, ticker)
 				stock = &models.Stock{
 					Ticker:    ticker,
 					Date:      date,
@@ -224,7 +219,7 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	}
 	workersWG.Wait()
 	// w.Write([]byte(fmt.Sprintf("%s", ticker)))
-	
+
 	res, err := proto.Marshal(stockSentiments)
 	// res, err := json.Marshal(result)
 	if err != nil {
