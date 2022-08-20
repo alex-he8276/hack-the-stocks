@@ -3,11 +3,13 @@ package config
 import (
 	"fmt"
 
+	"github.com/cohere-ai/cohere-go"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 var db *gorm.DB
+var co *cohere.Client
 
 func ConnectDB() {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details

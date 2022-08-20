@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	numDays          = 3
+	numDays          = 7
 	numTweetsPerDay  = 10
 	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22"
 
@@ -81,30 +81,30 @@ var examples = []cohere.Example{
 
 type TwitterResult struct {
 	Tweets     []Tweet `json:"data"`
-	TweetUsers Users   `json:includes`
+	TweetUsers Users   `json:"includes"`
 }
 
 type Tweet struct {
-	AuthorID     string      `json:author_id`
+	AuthorID     string      `json:"author_id"`
 	ID           string      `json:"id"`
 	Text         string      `json:"text"`
-	TweetMetrics TweetMetric `json:public_metrics`
+	TweetMetrics TweetMetric `json:"public_metrics"`
 }
 
 type TweetMetric struct {
-	RetweetCount string `retweet_count`
-	ReplyCount   string `reply_count`
-	LikeCount    string `like_count`
-	QuoteCount   string `quote_count`
+	RetweetCount string `json:"retweet_count"`
+	ReplyCount   string `json:"reply_count"`
+	LikeCount    string `json:"like_count"`
+	QuoteCount   string `json:"quote_count"`
 }
 
 type Users struct {
-	Users []User `json:users`
+	Users []User `json:"users"`
 }
 
 type User struct {
 	ID          string     `json:"id"`
-	UserMetrics UserMetric `json:public_metrics`
+	UserMetrics UserMetric `json:"public_metrics"`
 }
 
 type UserMetric struct {
@@ -135,18 +135,10 @@ func retrieveTweets(ticker string, date time.Time) TwitterResult {
 	defer resp.Body.Close()
 	twitterResponse := TwitterResult{}
 	utils.ParseBody(resp, &twitterResponse)
-
-	// TODO: Filter Tweet Creator by Followers
-	fmt.Println(twitterResponse)
 	return twitterResponse
 }
 
-func classify(ticker string, date time.Time, tweets []string) *cohere.ClassifyResponse {
-	co, err := cohere.CreateClient(config.COHERE_API_KEY)
-	if err != nil {
-		fmt.Println(err)
-	}
-
+func classify(co *cohere.Client, ticker string, date time.Time, tweets []string) *cohere.ClassifyResponse {
 	response, err := co.Classify(cohere.ClassifyOptions{
 		Model:           config.COHERE_MODEL_ID,
 		OutputIndicator: "Classify this tweet about a stock",
@@ -185,15 +177,27 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 
 				// get text from twitter response
 				tweets := make([]string, 0)
-				for _, tweet := range twitterResponse.Tweets {
-					tweets = append(tweets, tweet.Text)
+				var userMetric UserMetric
+				for i, tweet := range twitterResponse.Tweets {
+					// Filter out users with low follower count or following count
+					userMetric = twitterResponse.TweetUsers.Users[i].UserMetrics
+					if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
+						tweets = append(tweets, tweet.Text)
+					}
 				}
+
 				// classify sentiment
-				cohereResponse := classify(ticker, date, tweets)
+				co, err := cohere.CreateClient(config.COHERE_API_KEY)
+				if err != nil {
+					fmt.Println(err)
+				}
+				cohereResponse := classify(co, ticker, date, tweets)
 				sentiment := 0.0
 				for _, classification := range cohereResponse.Classifications {
-					fmt.Println(classification.Input, classification.Prediction)
-					if classification.Prediction == "positive" {
+					if i%10 == 0 {
+						fmt.Println(classification.Input, classification.Prediction)
+					}
+					if classification.Prediction == "1" {
 						sentiment += 1
 					}
 				}
@@ -217,7 +221,8 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 		}(i)
 	}
 	workersWG.Wait()
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/text")
 	res, err := proto.Marshal(stockSentiments)
 	if err != nil {
 		fmt.Printf("error: %v", err)
