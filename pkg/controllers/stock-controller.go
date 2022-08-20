@@ -178,11 +178,16 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				// get text from twitter response
 				tweets := make([]string, 0)
 				var userMetric UserMetric
-				for i, tweet := range twitterResponse.Tweets {
+				for _, tweet := range twitterResponse.Tweets {
 					// Filter out users with low follower count or following count
-					userMetric = twitterResponse.TweetUsers.Users[i].UserMetrics
-					if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
-						tweets = append(tweets, tweet.Text)
+					for _, user := range twitterResponse.TweetUsers.Users {
+						if user.ID == tweet.AuthorID {
+							userMetric = user.UserMetrics
+							if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
+								tweets = append(tweets, tweet.Text)
+								break
+							}
+						}
 					}
 				}
 
@@ -191,17 +196,19 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					fmt.Println(err)
 				}
-				cohereResponse := classify(co, ticker, date, tweets)
 				sentiment := 0.0
-				for _, classification := range cohereResponse.Classifications {
-					if i%10 == 0 {
-						fmt.Println(classification.Input, classification.Prediction)
+				if len(tweets) > 0 {
+					cohereResponse := classify(co, ticker, date, tweets)
+					for _, classification := range cohereResponse.Classifications {
+						if i%10 == 0 {
+							fmt.Println(classification.Input, classification.Prediction)
+						}
+						if classification.Prediction == "1" {
+							sentiment += 1
+						}
 					}
-					if classification.Prediction == "1" {
-						sentiment += 1
-					}
+					sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
 				}
-				sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
 				stock = &models.Stock{
 					Ticker:    ticker,
 					Date:      date,
