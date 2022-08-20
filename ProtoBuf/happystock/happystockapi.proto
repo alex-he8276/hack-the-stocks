@@ -8,6 +8,8 @@ message stockSentiment {
     string name =1;
     google.protobuf.Timestamp date = 2;
     int32 sentiment = 3;
+    string tweetExample = 4;
+    int32 tweetSentiment = 5;
 }
 
 message stockPrice {
@@ -18,9 +20,7 @@ message stockPrice {
 
 message listStockSentiment {
     repeated stockSentiment sentimentList = 1;
-    string tweetExample = 2;
-    int32 tweetSentiment = 3;
-}
+    }
 
 message listStockPrice{
     repeated stockPrice priceList = 1;

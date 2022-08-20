@@ -145,7 +145,9 @@ proto.happystock.happystockapi.stockSentiment.toObject = function(includeInstanc
   var f, obj = {
     name: jspb.Message.getFieldWithDefault(msg, 1, ""),
     date: (f = msg.getDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    sentiment: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    sentiment: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    tweetexample: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    tweetsentiment: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -195,6 +197,14 @@ proto.happystock.happystockapi.stockSentiment.deserializeBinaryFromReader = func
       var value = /** @type {number} */ (reader.readInt32());
       msg.setSentiment(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTweetexample(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setTweetsentiment(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -243,6 +253,20 @@ proto.happystock.happystockapi.stockSentiment.serializeBinaryToWriter = function
   if (f !== 0) {
     writer.writeInt32(
       3,
+      f
+    );
+  }
+  f = message.getTweetexample();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getTweetsentiment();
+  if (f !== 0) {
+    writer.writeInt32(
+      5,
       f
     );
   }
@@ -319,6 +343,42 @@ proto.happystock.happystockapi.stockSentiment.prototype.getSentiment = function(
  */
 proto.happystock.happystockapi.stockSentiment.prototype.setSentiment = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string tweetExample = 4;
+ * @return {string}
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.getTweetexample = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.happystock.happystockapi.stockSentiment} returns this
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.setTweetexample = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional int32 tweetSentiment = 5;
+ * @return {number}
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.getTweetsentiment = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.happystock.happystockapi.stockSentiment} returns this
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.setTweetsentiment = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -573,9 +633,7 @@ proto.happystock.happystockapi.listStockSentiment.prototype.toObject = function(
 proto.happystock.happystockapi.listStockSentiment.toObject = function(includeInstance, msg) {
   var f, obj = {
     sentimentlistList: jspb.Message.toObjectList(msg.getSentimentlistList(),
-    proto.happystock.happystockapi.stockSentiment.toObject, includeInstance),
-    tweetexample: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    tweetsentiment: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    proto.happystock.happystockapi.stockSentiment.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -617,14 +675,6 @@ proto.happystock.happystockapi.listStockSentiment.deserializeBinaryFromReader = 
       reader.readMessage(value,proto.happystock.happystockapi.stockSentiment.deserializeBinaryFromReader);
       msg.addSentimentlist(value);
       break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setTweetexample(value);
-      break;
-    case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setTweetsentiment(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -660,20 +710,6 @@ proto.happystock.happystockapi.listStockSentiment.serializeBinaryToWriter = func
       1,
       f,
       proto.happystock.happystockapi.stockSentiment.serializeBinaryToWriter
-    );
-  }
-  f = message.getTweetexample();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getTweetsentiment();
-  if (f !== 0) {
-    writer.writeInt32(
-      3,
-      f
     );
   }
 };
@@ -714,42 +750,6 @@ proto.happystock.happystockapi.listStockSentiment.prototype.addSentimentlist = f
  */
 proto.happystock.happystockapi.listStockSentiment.prototype.clearSentimentlistList = function() {
   return this.setSentimentlistList([]);
-};
-
-
-/**
- * optional string tweetExample = 2;
- * @return {string}
- */
-proto.happystock.happystockapi.listStockSentiment.prototype.getTweetexample = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.happystock.happystockapi.listStockSentiment} returns this
- */
-proto.happystock.happystockapi.listStockSentiment.prototype.setTweetexample = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional int32 tweetSentiment = 3;
- * @return {number}
- */
-proto.happystock.happystockapi.listStockSentiment.prototype.getTweetsentiment = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.happystock.happystockapi.listStockSentiment} returns this
- */
-proto.happystock.happystockapi.listStockSentiment.prototype.setTweetsentiment = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 

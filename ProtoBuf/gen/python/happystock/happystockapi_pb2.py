@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ehappystock/happystockapi.proto\x12\x18happystock.happystockapi\x1a\x1fgoogle/protobuf/timestamp.proto\"r\n\x0estockSentiment\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12.\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x04\x64\x61te\x12\x1c\n\tsentiment\x18\x03 \x01(\x05R\tsentiment\"f\n\nstockPrice\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12.\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x04\x64\x61te\x12\x14\n\x05price\x18\x03 \x01(\x01R\x05price\"\xb0\x01\n\x12listStockSentiment\x12N\n\rsentimentList\x18\x01 \x03(\x0b\x32(.happystock.happystockapi.stockSentimentR\rsentimentList\x12\"\n\x0ctweetExample\x18\x02 \x01(\tR\x0ctweetExample\x12&\n\x0etweetSentiment\x18\x03 \x01(\x05R\x0etweetSentiment\"T\n\x0elistStockPrice\x12\x42\n\tpriceList\x18\x01 \x03(\x0b\x32$.happystock.happystockapi.stockPriceR\tpriceListB\xde\x01\n\x1c\x63om.happystock.happystockapiB\x12HappystockapiProtoP\x01Z)buf.build/mewcifer/happystocks/happystock\xa2\x02\x03HHX\xaa\x02\x18Happystock.Happystockapi\xca\x02\x18Happystock\\Happystockapi\xe2\x02$Happystock\\Happystockapi\\GPBMetadata\xea\x02\x19Happystock::Happystockapib\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ehappystock/happystockapi.proto\x12\x18happystock.happystockapi\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x01\n\x0estockSentiment\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12.\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x04\x64\x61te\x12\x1c\n\tsentiment\x18\x03 \x01(\x05R\tsentiment\x12\"\n\x0ctweetExample\x18\x04 \x01(\tR\x0ctweetExample\x12&\n\x0etweetSentiment\x18\x05 \x01(\x05R\x0etweetSentiment\"f\n\nstockPrice\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12.\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x04\x64\x61te\x12\x14\n\x05price\x18\x03 \x01(\x01R\x05price\"d\n\x12listStockSentiment\x12N\n\rsentimentList\x18\x01 \x03(\x0b\x32(.happystock.happystockapi.stockSentimentR\rsentimentList\"T\n\x0elistStockPrice\x12\x42\n\tpriceList\x18\x01 \x03(\x0b\x32$.happystock.happystockapi.stockPriceR\tpriceListB\xde\x01\n\x1c\x63om.happystock.happystockapiB\x12HappystockapiProtoP\x01Z)buf.build/mewcifer/happystocks/happystock\xa2\x02\x03HHX\xaa\x02\x18Happystock.Happystockapi\xca\x02\x18Happystock\\Happystockapi\xe2\x02$Happystock\\Happystockapi\\GPBMetadata\xea\x02\x19Happystock::Happystockapib\x06proto3')
 
 
 
@@ -55,11 +55,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\034com.happystock.happystockapiB\022HappystockapiProtoP\001Z)buf.build/mewcifer/happystocks/happystock\242\002\003HHX\252\002\030Happystock.Happystockapi\312\002\030Happystock\\Happystockapi\342\002$Happystock\\Happystockapi\\GPBMetadata\352\002\031Happystock::Happystockapi'
-  _STOCKSENTIMENT._serialized_start=93
-  _STOCKSENTIMENT._serialized_end=207
-  _STOCKPRICE._serialized_start=209
-  _STOCKPRICE._serialized_end=311
-  _LISTSTOCKSENTIMENT._serialized_start=314
+  _STOCKSENTIMENT._serialized_start=94
+  _STOCKSENTIMENT._serialized_end=284
+  _STOCKPRICE._serialized_start=286
+  _STOCKPRICE._serialized_end=388
+  _LISTSTOCKSENTIMENT._serialized_start=390
   _LISTSTOCKSENTIMENT._serialized_end=490
   _LISTSTOCKPRICE._serialized_start=492
   _LISTSTOCKPRICE._serialized_end=576
