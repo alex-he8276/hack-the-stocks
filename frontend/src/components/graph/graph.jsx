@@ -72,8 +72,8 @@ const Graph = ({ data , sentiment , stockName}) => {
             xScale={{ type: "point" }}
             yScale={{
               type: "linear",
-              min: "auto",
-              max: "auto",
+              min: 0,
+              max: 100,
               stacked: true,
               reverse: false,
             }}
