@@ -135,8 +135,6 @@ func retrieveTweets(ticker string, date time.Time) TwitterResult {
 	defer resp.Body.Close()
 	twitterResponse := TwitterResult{}
 	utils.ParseBody(resp, &twitterResponse)
-
-	fmt.Println(twitterResponse)
 	return twitterResponse
 }
 
@@ -220,7 +218,8 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 		}(i)
 	}
 	workersWG.Wait()
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/text")
 	res, err := proto.Marshal(stockSentiments)
 	if err != nil {
 		fmt.Printf("error: %v", err)
