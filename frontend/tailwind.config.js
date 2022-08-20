@@ -9,7 +9,11 @@ module.exports = {
       backgroundImage: {
         'image1': "url('/public/images/image1.jpg')",
         'image2': "url('/public/images/image2.jpg')",
-      }
+      },
+      fontFamily: {
+        'comfortaa': ['Comfortaa', 'cursive'] 
+      },
+
     },
   },
   plugins: [],
