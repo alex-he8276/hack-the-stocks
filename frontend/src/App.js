@@ -12,9 +12,9 @@ function App() {
   const [search, setSearch] = useState(false);
   const [stockPriceData, setStockPriceData] = useState([]);
   const [sentimentData, setSentimentData] = useState([]);
-  const [ticker, setTicker] = useState("")
-  const [companyName, setCompanyName] = useState("")
-  const [graphLabel, setGraphLabel] = useState("")
+  const [ticker, setTicker] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [graphLabel, setGraphLabel] = useState("");
 
   const hitStockApi = (ticker) => {
     const apiUrl = `http://127.0.0.1:5000/stock_price?ticker=${ticker}`;
@@ -36,23 +36,26 @@ function App() {
         });
         setStockPriceData(result);
         setLoading(false);
-      });
+      })
+      .catch((err) => console.log(err));
   };
 
   const hitSentimentApi = (ticker) => {
     /* placeholder */
-    const apiUrl = `http://127.0.0.1:5000/stock_price?ticker=TSLA`;
+    const apiUrl = `http://localhost:8080/api/stock/${ticker}`;
     fetch(apiUrl)
       .then((response) => response.arrayBuffer())
       .then((data) => {
-        let myData = happystockapi.listStockPrice.deserializeBinary(data);
+        let myData = happystockapi.listStockSentiment.deserializeBinary(data);
         let dataObj = myData.toObject();
-        myData = dataObj.pricelistList.map((item) => {
+        console.log(dataObj)
+        myData = dataObj.sentimentlistList.map((item) => {
           return {
             x: new Date(item.date.seconds * 1000).toLocaleDateString("en-US"),
-            y: item.price,
+            y: item.sentiment,
           };
         });
+        console.log(myData)
         const result = [];
         result.push({
           id: "Sentiment",
@@ -60,18 +63,19 @@ function App() {
         });
         setSentimentData(result);
         setLoading(false);
-      });
-  }
+      })
+      .catch((err) => console.log(err));
+  };
 
   const buttonClick = () => {
-    if(companyName !== graphLabel && ticker) {
+    if (companyName !== graphLabel && ticker) {
       setLoading(true);
       setSearch(true);
       setStockPriceData([]);
       setGraphLabel(companyName);
-      console.log(ticker)
+      console.log(ticker);
       hitStockApi(ticker);
-      hitSentimentApi(ticker)
+      hitSentimentApi(ticker);
     }
   };
 
@@ -85,16 +89,20 @@ function App() {
             </h1>
           </div>
           <div className="mt-5 2xl:mt-7 flex space-x-2">
-            <Search setValue={setTicker} setInputValue={setCompanyName}/>
+            <Search setValue={setTicker} setInputValue={setCompanyName} />
             <Button onClick={buttonClick}>
               Search <SearchIcon />
             </Button>
           </div>
           {loading ? (
             <>pog</>
-          ) : search ? (<>
-          
-            <Graph data={stockPriceData} sentiment={sentimentData} stockName={graphLabel}/>
+          ) : search ? (
+            <>
+              <Graph
+                data={stockPriceData}
+                sentiment={sentimentData}
+                stockName={graphLabel}
+              />
             </>
           ) : (
             <></>
