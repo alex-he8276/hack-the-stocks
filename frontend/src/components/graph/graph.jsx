@@ -1,27 +1,7 @@
 import * as React from "react";
 import { ResponsiveLine } from "@nivo/line";
 
-const fakeData = {
-  listStockPrice: [
-    { date: 1660276800, stockPrice: 291.29, tickerName: "MSFT" },
-    { date: 1660536000, stockPrice: 292.84, tickerName: "MSFT" },
-    { date: 1660622400, stockPrice: 292.08, tickerName: "MSFT" },
-    { date: 1660708800, stockPrice: 291.32, tickerName: "MSFT" },
-    { date: 1660795200, stockPrice: 290.17, tickerName: "MSFT" },
-  ],
-};
-
-const Graph = () => {
-  const myData = fakeData.listStockPrice.map((item) => ({
-    x: new Date(item.date * 1000).toLocaleDateString("en-US"),
-    y: item.stockPrice,
-  }));
-  const data = [];
-  data.push({
-    id: fakeData.listStockPrice[0].tickerName,
-    data: myData,
-  });
-  console.log(data);
+const Graph = ({data}) => {
   return (
     <>
     <div className="outline-green-300 outline rounded-2xl mt-8 2xl:mt-18 px-5 w-[48rem] h-[19rem] 2xl:h-[35rem] 2xl:w-[62rem]">

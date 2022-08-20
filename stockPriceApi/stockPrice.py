@@ -3,6 +3,7 @@ import yfinance as yf
 from datetime import date, timedelta
 import happystockapi_pb2 as happystock
 
+
 app = Flask(__name__)
 
 def fetchStockPrices(ticker):
@@ -28,4 +29,6 @@ def returnStockPrices():
     if 'ticker' in request.args: 
         ticker = request.args['ticker']
         stockPriceList = fetchStockPrices(ticker)
-    return stockPriceList.SerializeToString()
+    headers = {'Access-Control-Allow-Origin': '*'}
+    data = stockPriceList.SerializeToString()
+    return data, headers
