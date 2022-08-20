@@ -10,7 +10,7 @@ import (
 var db *gorm.DB
 
 type Stock struct {
-	gorm.Model
+	// gorm.Model
 	Ticker    string    `gorm:""json:"ticker"`
 	Date      time.Time `json:"date"`
 	Sentiment float64   `json:"sentiment"`

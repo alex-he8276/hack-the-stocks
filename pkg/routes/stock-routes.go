@@ -6,5 +6,5 @@ import (
 )
 
 var RegisterRoutes = func(router *mux.Router) {
-	router.HandleFunc("/api/stock/{ticker}", controllers.GetStockSentimentAndPrice).Methods("GET")
+	router.HandleFunc("/api/stock/{ticker}", controllers.GetStockSentiment).Methods("GET")
 }
