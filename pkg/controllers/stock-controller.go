@@ -11,10 +11,11 @@ import (
 	"github.com/cohere-ai/cohere-go"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/mux"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/alex-he8276/hack-the-stocks/pkg/config"
 	"github.com/alex-he8276/hack-the-stocks/pkg/models"
-	"github.com/alex-he8276/hack-the-stocks/pkg/proto/happystock"
+	pb "github.com/alex-he8276/hack-the-stocks/pkg/proto"
 	"github.com/alex-he8276/hack-the-stocks/pkg/utils"
 )
 
@@ -208,10 +209,17 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 		}(i)
 	}
 	workersWG.Wait()
-	w.Write([]byte(fmt.Sprintf("%s", ticker)))
+	// w.Write([]byte(fmt.Sprintf("%s", ticker)))
 
-	// TODO: protobuf
-	stockSentiments := &happystock.ListStockSentiment{}
+	stockSentiments := &pb.ListStockSentiment{}
+	for _, stock := range result.Stock {
+		stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
+			Name:      stock.Ticker,
+			Date:      timestamppb.New(stock.Date),
+			Sentiment: int32(stock.Sentiment),
+		})
+	}
+
 	res, err := proto.Marshal(stockSentiments)
 	// res, err := json.Marshal(result)
 	if err != nil {
