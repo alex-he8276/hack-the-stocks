@@ -1,10 +1,6 @@
 from flask import Flask, request
 import yfinance as yf
 from datetime import date, timedelta
-
-# Import Buf
-import sys
-sys.path.insert(1, '../ProtoBuf/gen/python/happystock/')
 import happystockapi_pb2 as happystock
 
 app = Flask(__name__)
