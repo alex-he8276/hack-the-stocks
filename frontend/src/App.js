@@ -5,6 +5,7 @@ import Button from "./components/util/button";
 import SearchIcon from "@mui/icons-material/Search";
 import Graph from "./components/graph/graph";
 import Loading from "./components/util/loading";
+import ClassifiedTweets from './components/classified/classified'
 import { useState } from "react";
 import * as happystockapi from "./happystockapi_pb";
 
@@ -89,7 +90,7 @@ function App() {
         <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet"></link>
       </head>
       <Layout>
-        <div className="w-2/3 bg-slate-50 mx-auto my-8 rounded-3xl shadow-2xl">
+        <div className="w-2/3 h-full bg-slate-50 mx-auto my-8 rounded-3xl shadow-2xl">
           <div className="flex flex-col items-center">
             <div className="justify-center flex">
               <h1 className="text-5xl 2xl:text-6xl mt-10 2xl:ml-15 font-comfortaa">
@@ -112,11 +113,12 @@ function App() {
                   stockName={graphLabel}
                 />
               </>
-            ) : (
-              <></>
-            )}
+            ) : 
+              <div className="my-32"></div>
+            }
           </div>
         </div>
+        <ClassifiedTweets />
       </Layout>
     </>
   );
