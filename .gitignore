@@ -1,4 +1,6 @@
+# Go files
 secrets.go
+cmd.exe
 
 # Logs
 logs
