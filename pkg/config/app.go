@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -9,11 +11,12 @@ var db *gorm.DB
 
 func ConnectDB() {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	d, err := gorm.Open("mysql", "username:password@12@/simplerest?charset=utf8&parseTime=True&loc=Local")
+	var err error
+	db, err = gorm.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/happy-db?charset=utf8mb4&parseTime=True&loc=Local", DB_USER, DB_PASSWORD, DB_HOST))
 	if err != nil {
 		panic(err)
 	}
-	db = d
+	fmt.Println("Connected to DB")
 }
 
 func GetDB() *gorm.DB {
