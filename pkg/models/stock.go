@@ -13,7 +13,7 @@ type Stock struct {
 	gorm.Model
 	Ticker    string    `gorm:""json:"ticker"`
 	Date      time.Time `json:"date"`
-	Sentiment uint      `json:"sentiment"`
+	Sentiment float64   `json:"sentiment"`
 }
 
 func init() {
@@ -32,4 +32,10 @@ func GetStockByTickerAndDate(ticker string, date time.Time) *Stock {
 	var stock Stock
 	_ = db.Where("Ticker = ? AND Date = ?", ticker, date).Find(&stock)
 	return &stock
+}
+
+func (s *Stock) CreateStock() *Stock {
+	db.NewRecord(s)
+	db.Create(&s)
+	return s
 }
