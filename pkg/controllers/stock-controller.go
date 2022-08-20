@@ -179,8 +179,13 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 
 				// get text from twitter response
 				tweets := make([]string, 0)
-				for _, tweet := range twitterResponse.Tweets {
-					tweets = append(tweets, tweet.Text)
+				var userMetric UserMetric
+				for i, tweet := range twitterResponse.Tweets {
+					// Filter out users with low follower count or following count
+					userMetric = twitterResponse.TweetUsers.Users[i].UserMetrics
+					if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
+						tweets = append(tweets, tweet.Text)
+					}
 				}
 
 				// classify sentiment
@@ -188,7 +193,9 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				cohereResponse := classify(co, ticker, date, tweets)
 				sentiment := 0.0
 				for _, classification := range cohereResponse.Classifications {
-					fmt.Println(classification.Input, classification.Prediction)
+					if i%10 == 0 {
+						fmt.Println(classification.Input, classification.Prediction)
+					}
 					if classification.Prediction == "1" {
 						sentiment += 1
 					}
