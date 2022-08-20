@@ -178,12 +178,12 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				// get text from twitter response
 				tweets := make([]string, 0)
 				var userMetric UserMetric
-				for _, tweet := range twitterResponse.Tweets {
+				for i, tweet := range twitterResponse.Tweets {
 					// Filter out users with low follower count or following count
 					for _, user := range twitterResponse.TweetUsers.Users {
 						if user.ID == tweet.AuthorID {
 							userMetric = user.UserMetrics
-							if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
+							if i == 0 || (userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20) {
 								tweets = append(tweets, tweet.Text)
 								break
 							}
@@ -197,8 +197,9 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 					fmt.Println(err)
 				}
 				sentiment := 0.0
+				var cohereResponse *cohere.ClassifyResponse
 				if len(tweets) > 0 {
-					cohereResponse := classify(co, ticker, date, tweets)
+					cohereResponse = classify(co, ticker, date, tweets)
 					for _, classification := range cohereResponse.Classifications {
 						if i%10 == 0 {
 							fmt.Println(classification.Input, classification.Prediction)
@@ -209,10 +210,19 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 					}
 					sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
 				}
+
+				var classificationExample string
+				if cohereResponse.Classifications[0].Prediction == "1" {
+					classificationExample = "positive"
+				} else {
+					classificationExample = "negative"
+				}
 				stock = &models.Stock{
-					Ticker:    ticker,
-					Date:      date,
-					Sentiment: sentiment,
+					Ticker:                ticker,
+					Date:                  date,
+					Sentiment:             sentiment,
+					TweetExample:          twitterResponse.Tweets[0].ID,
+					ClassificationExample: classificationExample,
 				}
 
 				// save to database
@@ -220,9 +230,11 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 			}
 			//Append stock to result
 			stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
-				Name:      (*stock).Ticker,
-				Date:      timestamppb.New((*stock).Date),
-				Sentiment: int32((*stock).Sentiment),
+				Name:                  (*stock).Ticker,
+				Date:                  timestamppb.New((*stock).Date),
+				Sentiment:             int32((*stock).Sentiment),
+				TweetExample:          (*stock).TweetExample,
+				ClassificationExample: (*stock).ClassificationExample,
 			})
 
 		}(i)
