@@ -1,7 +1,6 @@
 from flask import Flask, request
 import yfinance as yf
-import pandas as pd
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 
 # Import Buf
 import sys
@@ -24,6 +23,7 @@ def fetchStockPrices(ticker):
         stockItem = stockPriceList.priceList.add()
         stockItem.name = ticker 
         stockItem.price = round(stockData['Close'], 2)
+        stockItem.date.FromDatetime(time) 
     return stockPriceList
 
 @app.route("/stock_price", methods=['GET'])
