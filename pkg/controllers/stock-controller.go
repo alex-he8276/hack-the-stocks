@@ -23,6 +23,7 @@ const (
 	numDays          = 3
 	numTweetsPerDay  = 10
 	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22"
+
 	twitterBaseURLP2 = "%22%20lang%3Aen%20-has%3Alinks&expansions=author_id&user.fields=public_metrics&tweet.fields=public_metrics&max_results="
 	twitterBaseURLP3 = "&end_time="
 )
@@ -111,26 +112,6 @@ type UserMetric struct {
 	FollowingCount   int `json:"following_count"`
 }
 
-
-// type TwitterMetadata struct {
-// 	NewestID    string `json:"newest_id"`
-// 	OldestID    string `json:"oldest_id"`
-// 	ResultCount int    `json:"result_count"`
-// }
-
-// type CohereResponse struct {
-// 	StockClassifications StockClassification `json:"results"`
-// }
-
-// type StockClassification struct {
-// 	Text       string `json:"text"`
-// 	Prediction string `json:"prediction"`
-// }
-
-type StockSentiment struct {
-	Stock [numDays]models.Stock
-}
-
 func checkDatabase(ticker string, date time.Time) (*models.Stock, bool) {
 	stock := models.GetStockByTickerAndDate(ticker, date)
 	if stock.Ticker == "" {
@@ -185,7 +166,8 @@ func classify(ticker string, date time.Time, tweets []string) *cohere.ClassifyRe
 func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	ticker := vars["ticker"]
-	result := StockSentiment{}
+	stockSentiments := &pb.ListStockSentiment{}
+	
 
 	workersWG := sync.WaitGroup{}
 	for i := 0; i < numDays; i++ {
@@ -226,26 +208,21 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 					Date:      date,
 					Sentiment: sentiment,
 				}
-
+				
 				// save to database
 				_ = stock.CreateStock()
 			}
+			//Append stock to result
+			stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
+			Name:      (*stock).Ticker,
+			Date:      timestamppb.New((*stock).Date),
+			Sentiment: int32((*stock).Sentiment),
+			})
 
-			// save the result to return
-			result.Stock[i] = *stock
 		}(i)
 	}
 	workersWG.Wait()
 	// w.Write([]byte(fmt.Sprintf("%s", ticker)))
-
-	stockSentiments := &pb.ListStockSentiment{}
-	for _, stock := range result.Stock {
-		stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
-			Name:      stock.Ticker,
-			Date:      timestamppb.New(stock.Date),
-			Sentiment: int32(stock.Sentiment),
-		})
-	}
 
 	res, err := proto.Marshal(stockSentiments)
 	// res, err := json.Marshal(result)
