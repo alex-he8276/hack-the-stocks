@@ -21,17 +21,19 @@ import (
 
 const (
 	numDays          = 7
+
 	numTweetsPerDay  = 100
 	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22%24"
-	twitterBaseURLP2 = "%22%20lang%3Aen%20-has%3Alinks&expansions=author_id&user.fields=public_metrics&tweet.fields=public_metrics&max_results="
+	twitterBaseURLP2 = "%22%20-BOT%20lang%3Aen%20-has%3Alinks&expansions=author_id&user.fields=public_metrics&tweet.fields=public_metrics&max_results="
+
 	twitterBaseURLP3 = "&end_time="
 )
 
-var examplesTweets = make([]cohere.Example,50)
+var examplesTweets = make([]cohere.Example, 50)
 
 var examples = []cohere.Example{
 	{
-		Text:  "%S is bullish keep holding until it hits",
+		Text:  "%s is bullish keep holding until it hits",
 		Label: "1",
 	},
 	{
@@ -319,7 +321,7 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 
 	
 	for i, example := range examples {
-        examplesTweets[i].Text = fmt.Sprintf(example.Text, ticker)
+		examplesTweets[i].Text = fmt.Sprintf(example.Text, ticker)
 		examplesTweets[i].Label = example.Label
     }
 
