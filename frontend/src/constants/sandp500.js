@@ -1,5 +1,4 @@
 export const stocks = [
-  { label: "GameStop Corp - GME", Sector: "Gaming", Symbol: "GME" },
   { label: "A. O. Smith - AOS", Sector: "Industrials", Symbol: "AOS" },
   { label: "Abbott Laboratories - ABT", Sector: "Health Care", Symbol: "ABT" },
   { label: "AbbVie - ABBV", Sector: "Health Care", Symbol: "ABBV" },
@@ -275,7 +274,6 @@ export const stocks = [
   { label: "Extra Space Storage - EXR", Sector: "Real Estate", Symbol: "EXR" },
   { label: "ExxonMobil - XOM", Sector: "Energy", Symbol: "XOM" },
   { label: "F5 Networks - FFIV", Sector: "Information Technology", Symbol: "FFIV" },
-  { label: "Facebook - FB", Sector: "Communication Services", Symbol: "FB" },
   { label: "Fastenal - FAST", Sector: "Industrials", Symbol: "FAST" },
   {
     label: "Federal Realty Investment Trust - FRT",
@@ -314,6 +312,7 @@ export const stocks = [
   },
   { label: "Franklin Resources - BEN", Sector: "Financials", Symbol: "BEN" },
   { label: "Freeport-McMoRan - FCX", Sector: "Materials", Symbol: "FCX" },
+  { label: "GameStop Corp - GME", Sector: "Gaming", Symbol: "GME" },
   { label: "Gap - GPS", Sector: "Consumer Discretionary", Symbol: "GPS" },
   { label: "Garmin - GRMN", Sector: "Consumer Discretionary", Symbol: "GRMN" },
   { label: "Gartner - IT", Sector: "Information Technology", Symbol: "IT" },
@@ -455,6 +454,7 @@ export const stocks = [
   { label: "McKesson Corporation - MCK", Sector: "Health Care", Symbol: "MCK" },
   { label: "Medtronic - MDT", Sector: "Health Care", Symbol: "MDT" },
   { label: "Merck & Co. - MRK", Sector: "Health Care", Symbol: "MRK" },
+  { label: "Meta - META", Sector: "Communication Services", Symbol: "META" },
   { label: "MetLife - MET", Sector: "Financials", Symbol: "MET" },
   { label: "Mettler Toledo - MTD", Sector: "Health Care", Symbol: "MTD" },
   {
