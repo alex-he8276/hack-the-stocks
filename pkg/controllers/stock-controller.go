@@ -361,35 +361,35 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 						}
 					}
 					sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
-				}
 
-				// Return the first classified tweet and it's classification
-				var tweetExample string
-				for _, tweet := range twitterResponse.Tweets {
-					if cohereResponse.Classifications[0].Input == tweet.Text {
-						tweetExample = tweet.ID
-						break
+					// Return the first classified tweet and it's classification
+					var tweetExample string
+					for _, tweet := range twitterResponse.Tweets {
+						if cohereResponse.Classifications[0].Input == tweet.Text {
+							tweetExample = tweet.ID
+							break
+						}
 					}
-				}
-				var classificationExample string
-				if cohereResponse.Classifications[0].Prediction == "1" {
-					classificationExample = "Positive"
-				} else {
-					classificationExample = "Negative"
-				}
-				stock = &models.Stock{
-					Ticker:                ticker,
-					Date:                  date,
-					Sentiment:             sentiment,
-					TweetExample:          tweetExample,
-					ClassificationExample: classificationExample,
-				}
+					var classificationExample string
+					if cohereResponse.Classifications[0].Prediction == "1" {
+						classificationExample = "Positive"
+					} else {
+						classificationExample = "Negative"
+					}
+					stock = &models.Stock{
+						Ticker:                ticker,
+						Date:                  date,
+						Sentiment:             sentiment,
+						TweetExample:          tweetExample,
+						ClassificationExample: classificationExample,
+					}
 
-				// save to database
-				_ = stock.CreateStock()
+					// save to database
+					_ = stock.CreateStock()
+				}
 			}
-			//Append stock to result
 
+			//Append stock to result
 			stockSentiments.SentimentList[numDays-(i+1)] = &pb.StockSentiment{
 				Name:                  (*stock).Ticker,
 				Date:                  timestamppb.New((*stock).Date),
