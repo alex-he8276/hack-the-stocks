@@ -27,6 +27,8 @@ const (
 	twitterBaseURLP3 = "&end_time="
 )
 
+var examplesTweets = make([]cohere.Example,50)
+
 var examples = []cohere.Example{
 	{
 		Text:  "%S is bullish keep holding until it hits",
@@ -37,11 +39,11 @@ var examples = []cohere.Example{
 		Label: "0",
 	},
 	{
-		Text:  "uptrend for %s over 150% today hold until 175%",
+		Text:  "uptrend for %s over 150%% today hold until 175%",
 		Label: "1",
 	},
 	{
-		Text:  "SHARES FALL 22% FROM JANUARY PEAK AMID TECH SELLOFF ",
+		Text:  "SHARES FALL 22%% FROM JANUARY PEAK AMID TECH SELLOFF ",
 		Label: "0",
 	},
 	{
@@ -77,7 +79,7 @@ var examples = []cohere.Example{
 		Label: "0",
 	},
 	{
-		Text:  "%s - We are in at 2.55 per share.  This looks like a good one, its moving up already - we will sell at a 7% gain #stocks #insidertrading",
+		Text:  "%s - We are in at 2.55 per share.  This looks like a good one, its moving up already - we will sell at a 7%% gain #stocks #insidertrading",
 		Label: "1",
 	},
 	{
@@ -141,11 +143,11 @@ var examples = []cohere.Example{
 		Label: "0",
 	},
 	{
-		Text:  "If such 2 minutes of analysis is showing that spam accounts are more than 20% then why did you choose a difficult option of seeing SEC filings of Twitter? Fire your IB and DD teams. Or was 28% fall in %s share price in a month the real reason for cold feet?",
+		Text:  "If such 2 minutes of analysis is showing that spam accounts are more than 20%% then why did you choose a difficult option of seeing SEC filings of Twitter? Fire your IB and DD teams. Or was 28%% fall in %s share price in a month the real reason for cold feet?",
 		Label: "0",
 	},
 	{
-		Text:  "%s is temporarily halting production of its products. The stock is down ~25% on the news",
+		Text:  "%s is temporarily halting production of its products. The stock is down ~25%% on the news",
 		Label: "0",
 	},
 	{
@@ -201,7 +203,7 @@ var examples = []cohere.Example{
 		Label: "1",
 	},
 	{
-		Text:  "%s of new buys this was the largest % gainer today - also was a fav as it was a pullback reversal  ",
+		Text:  "%s of new buys this was the largest %% gainer today - also was a fav as it was a pullback reversal  ",
 		Label: "1",
 	},
 	{
@@ -295,7 +297,7 @@ func classify(co *cohere.Client, ticker string, date time.Time, tweets []string)
 		OutputIndicator: "Classify this tweet about a stock",
 		TaskDescription: "Classify these tweets about a stock as positive, negative or neutral",
 		Inputs:          tweets,
-		Examples:        examples,
+		Examples:        examplesTweets,
 	})
 
 	if err != nil {
@@ -310,6 +312,13 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	ticker := vars["ticker"]
 	stockSentiments := &pb.ListStockSentiment{}
 	stockSentiments.SentimentList = make([]*pb.StockSentiment, numDays)
+
+	for i, example := range examples {
+        examplesTweets[i].Text = fmt.Sprintf(example.Text, ticker)
+		examplesTweets[i].Label = example.Label
+        fmt.Println(examplesTweets[i].Text)
+    }
+
 
 	workersWG := sync.WaitGroup{}
 	for i := 0; i < numDays; i++ {
