@@ -1,5 +1,5 @@
 export const stocks = [
-  { label: "3M - MMM", Sector: "Industrials", Symbol: "MMM" },
+  { label: "GameStop Corp - GME", Sector: "Gaming", Symbol: "GME" },
   { label: "A. O. Smith - AOS", Sector: "Industrials", Symbol: "AOS" },
   { label: "Abbott Laboratories - ABT", Sector: "Health Care", Symbol: "ABT" },
   { label: "AbbVie - ABBV", Sector: "Health Care", Symbol: "ABBV" },
@@ -24,7 +24,6 @@ export const stocks = [
   },
   { label: "AES Corp - AES", Sector: "Utilities", Symbol: "AES" },
   { label: "Aflac - AFL", Sector: "Financials", Symbol: "AFL" },
-  { label: "Agilent Technologies - A", Sector: "Health Care", Symbol: "A" },
   { label: "Air Products & Chemicals - APD", Sector: "Materials", Symbol: "APD" },
   {
     label: "Akamai Technologies AKAM",

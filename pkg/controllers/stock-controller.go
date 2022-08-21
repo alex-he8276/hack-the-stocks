@@ -22,8 +22,7 @@ import (
 const (
 	numDays          = 7
 	numTweetsPerDay  = 10
-	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22"
-
+	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22%24"
 	twitterBaseURLP2 = "%22%20lang%3Aen%20-has%3Alinks&expansions=author_id&user.fields=public_metrics&tweet.fields=public_metrics&max_results="
 	twitterBaseURLP3 = "&end_time="
 )
@@ -310,6 +309,7 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	ticker := vars["ticker"]
 	stockSentiments := &pb.ListStockSentiment{}
+	stockSentiments.SentimentList = make([]*pb.StockSentiment, numDays)
 
 	workersWG := sync.WaitGroup{}
 	for i := 0; i < numDays; i++ {
@@ -330,12 +330,12 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				// get text from twitter response
 				tweets := make([]string, 0)
 				var userMetric UserMetric
-				for i, tweet := range twitterResponse.Tweets {
+				for _, tweet := range twitterResponse.Tweets {
 					// Filter out users with low follower count or following count
 					for _, user := range twitterResponse.TweetUsers.Users {
 						if user.ID == tweet.AuthorID {
 							userMetric = user.UserMetrics
-							if i == 0 || (userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20) {
+							if userMetric.FollowersCount > 100 && userMetric.FollowingCount > 20 {
 								tweets = append(tweets, tweet.Text)
 								break
 							}
@@ -363,17 +363,26 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 					sentiment = sentiment * 100 / float64(len(cohereResponse.Classifications))
 				}
 
+				// Return the first classified tweet and it's classification
+				var tweetExample string
+				for _, tweet := range twitterResponse.Tweets {
+					if cohereResponse.Classifications[0].Input == tweet.Text {
+						tweetExample = tweet.ID
+						break
+					}
+				}
 				var classificationExample string
 				if cohereResponse.Classifications[0].Prediction == "1" {
-					classificationExample = "positive"
+					classificationExample = "Positive"
 				} else {
-					classificationExample = "negative"
+					classificationExample = "Negative"
 				}
+
 				stock = &models.Stock{
 					Ticker:                ticker,
 					Date:                  date,
 					Sentiment:             sentiment,
-					TweetExample:          twitterResponse.Tweets[0].ID,
+					TweetExample:          tweetExample,
 					ClassificationExample: classificationExample,
 				}
 
@@ -381,13 +390,13 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				_ = stock.CreateStock()
 			}
 			//Append stock to result
-			stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
+			stockSentiments.SentimentList[numDays-(i+1)] = &pb.StockSentiment{
 				Name:                  (*stock).Ticker,
 				Date:                  timestamppb.New((*stock).Date),
 				Sentiment:             int32((*stock).Sentiment),
 				TweetExample:          (*stock).TweetExample,
 				ClassificationExample: (*stock).ClassificationExample,
-			})
+			}
 
 		}(i)
 	}

@@ -3,7 +3,7 @@ import { Player } from '@lottiefiles/react-lottie-player';
 
 const Loading = () => {
   return (
-    <div className="flex w-full h-full justify-center items-center 2xl:mt-20">
+    <div className="flex w-full h-full justify-center items-center my-10 2xl:mt-20">
         <Player
             autoplay
             loop

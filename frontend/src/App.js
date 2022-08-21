@@ -5,6 +5,7 @@ import Button from "./components/util/button";
 import SearchIcon from "@mui/icons-material/Search";
 import Graph from "./components/graph/graph";
 import Loading from "./components/util/loading";
+import ClassifiedTweets from "./components/classified/classified";
 import { useState } from "react";
 import * as happystockapi from "./happystockapi_pb";
 
@@ -13,6 +14,7 @@ function App() {
   const [search, setSearch] = useState(false);
   const [stockPriceData, setStockPriceData] = useState([]);
   const [sentimentData, setSentimentData] = useState([]);
+  const [tweetExamples, setTweetExamples] = useState([]);
   const [ticker, setTicker] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [graphLabel, setGraphLabel] = useState("");
@@ -26,7 +28,7 @@ function App() {
         let dataObj = myData.toObject();
         myData = dataObj.pricelistList.map((item) => {
           return {
-            x: new Date(item.date.seconds * 1000).toLocaleDateString("en-US"),
+            x: new Date(item.date.seconds * 1000 + 5 * 3600 * 1000).toLocaleDateString("en-US"),
             y: item.price,
           };
         });
@@ -41,21 +43,25 @@ function App() {
   };
 
   const hitSentimentApi = (ticker) => {
-    /* placeholder */
     const apiUrl = `http://localhost:8080/api/stock/${ticker}`;
     fetch(apiUrl)
       .then((response) => response.arrayBuffer())
       .then((data) => {
         let myData = happystockapi.listStockSentiment.deserializeBinary(data);
         let dataObj = myData.toObject();
-        console.log(dataObj);
+        let tweetList = dataObj.sentimentlistList.map((item) => {
+          return {
+            id: item.tweetexample,
+            classification: item.classificationexample,
+          };
+        });
+        setTweetExamples(tweetList);
         myData = dataObj.sentimentlistList.map((item) => {
           return {
             x: new Date(item.date.seconds * 1000).toLocaleDateString("en-US"),
             y: item.sentiment,
           };
         });
-        console.log(myData);
         const result = [];
         result.push({
           id: "Sentiment",
@@ -82,14 +88,19 @@ function App() {
   return (
     <>
       <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com"></link>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></link>
-        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet"></link>
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin
+        ></link>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap"
+          rel="stylesheet"
+        ></link>
       </head>
       <Layout>
-        <div className="w-2/3 bg-slate-50 mx-auto my-8 rounded-3xl shadow-2xl">
+        <div className="w-2/3 h-full bg-slate-50 mx-auto my-8 rounded-3xl shadow-2xl">
           <div className="flex flex-col items-center">
             <div className="justify-center flex">
               <h1 className="text-5xl 2xl:text-6xl mt-10 2xl:ml-15 font-comfortaa">
@@ -113,10 +124,15 @@ function App() {
                 />
               </>
             ) : (
-              <></>
+              <div className="my-32"></div>
             )}
           </div>
         </div>
+        {!loading && search ? (
+          <ClassifiedTweets tweetList={tweetExamples} />
+        ) : (
+          <></>
+        )}
       </Layout>
     </>
   );
