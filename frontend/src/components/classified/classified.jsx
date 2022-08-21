@@ -9,7 +9,7 @@ const TweetCard = ({ classification, id }) => {
   return (
     <div className="my-5 w-full">
       <div
-        className={`w-full flex flex-col ${borderColor} outline rounded-2xl p-3 items-center`}
+        className={`w-full flex flex-col ${borderColor} outline rounded-2xl p-3`}
       >
         <div className="flex justify-center">
           <h4 className="font-comfortaa font-bold">
@@ -18,8 +18,6 @@ const TweetCard = ({ classification, id }) => {
           </h4>
         </div>
         <TwitterTweetEmbed tweetId={id} />
-        
-       
       </div>
     </div>
   );
