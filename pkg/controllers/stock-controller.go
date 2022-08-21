@@ -22,8 +22,7 @@ import (
 const (
 	numDays          = 7
 	numTweetsPerDay  = 10
-	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22"
-
+	twitterBaseURLP1 = "https://api.twitter.com/2/tweets/search/recent?query=%22%24"
 	twitterBaseURLP2 = "%22%20lang%3Aen%20-has%3Alinks&expansions=author_id&user.fields=public_metrics&tweet.fields=public_metrics&max_results="
 	twitterBaseURLP3 = "&end_time="
 )
