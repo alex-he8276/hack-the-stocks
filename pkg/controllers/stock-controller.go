@@ -158,6 +158,7 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	ticker := vars["ticker"]
 	stockSentiments := &pb.ListStockSentiment{}
+	stockSentiments.SentimentList = make([]*pb.StockSentiment, numDays)
 
 	workersWG := sync.WaitGroup{}
 	for i := 0; i < numDays; i++ {
@@ -229,13 +230,13 @@ func GetStockSentiment(w http.ResponseWriter, r *http.Request) {
 				_ = stock.CreateStock()
 			}
 			//Append stock to result
-			stockSentiments.SentimentList = append(stockSentiments.SentimentList, &pb.StockSentiment{
+			stockSentiments.SentimentList[numDays-(i+1)] = &pb.StockSentiment{
 				Name:                  (*stock).Ticker,
 				Date:                  timestamppb.New((*stock).Date),
 				Sentiment:             int32((*stock).Sentiment),
 				TweetExample:          (*stock).TweetExample,
 				ClassificationExample: (*stock).ClassificationExample,
-			})
+			}
 
 		}(i)
 	}
