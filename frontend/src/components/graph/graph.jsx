@@ -4,7 +4,7 @@ import { ResponsiveLine } from "@nivo/line";
 const Graph = ({ data , sentiment , stockName}) => {
   return (
     <>
-      <div className="relative outline-green-300 outline rounded-2xl mt-5 2xl:mt-18 px-5 w-[48rem] h-[20.5rem] 2xl:h-[38rem] 2xl:w-[62rem]">
+      <div className="relative outline-green-300 outline rounded-2xl my-5 2xl:mt-18 px-5 w-[48rem] h-[20.5rem] 2xl:h-[38rem] 2xl:w-[62rem]">
         <div className="flex w-full justify-center mt-1"><h1>{stockName}</h1></div>
         <div className="absolute w-[48rem] h-[19rem] 2xl:h-[35rem] 2xl:w-[62rem] z-[4]">
           <ResponsiveLine
@@ -72,8 +72,8 @@ const Graph = ({ data , sentiment , stockName}) => {
             xScale={{ type: "point" }}
             yScale={{
               type: "linear",
-              min: "auto",
-              max: "auto",
+              min: 0,
+              max: 100,
               stacked: true,
               reverse: false,
             }}
@@ -81,15 +81,7 @@ const Graph = ({ data , sentiment , stockName}) => {
             yFormat=" >-.2f"
             axisTop={null}
             axisLeft={null}
-            axisBottom={{
-              orient: "bottom",
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: "date",
-              legendOffset: 36,
-              legendPosition: "middle",
-            }}
+            axisBottom={null}
             axisRight={{
               orient: "right",
               tickSize: 5,

@@ -145,7 +145,9 @@ proto.happystock.happystockapi.stockSentiment.toObject = function(includeInstanc
   var f, obj = {
     name: jspb.Message.getFieldWithDefault(msg, 1, ""),
     date: (f = msg.getDate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    sentiment: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    sentiment: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    tweetexample: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    classificationexample: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -195,6 +197,14 @@ proto.happystock.happystockapi.stockSentiment.deserializeBinaryFromReader = func
       var value = /** @type {number} */ (reader.readInt32());
       msg.setSentiment(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTweetexample(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setClassificationexample(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -243,6 +253,20 @@ proto.happystock.happystockapi.stockSentiment.serializeBinaryToWriter = function
   if (f !== 0) {
     writer.writeInt32(
       3,
+      f
+    );
+  }
+  f = message.getTweetexample();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getClassificationexample();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
       f
     );
   }
@@ -319,6 +343,42 @@ proto.happystock.happystockapi.stockSentiment.prototype.getSentiment = function(
  */
 proto.happystock.happystockapi.stockSentiment.prototype.setSentiment = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string tweetExample = 4;
+ * @return {string}
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.getTweetexample = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.happystock.happystockapi.stockSentiment} returns this
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.setTweetexample = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string classificationExample = 5;
+ * @return {string}
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.getClassificationexample = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.happystock.happystockapi.stockSentiment} returns this
+ */
+proto.happystock.happystockapi.stockSentiment.prototype.setClassificationexample = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
