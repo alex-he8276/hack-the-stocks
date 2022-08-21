@@ -2,7 +2,7 @@ package models
 
 import (
 	"time"
-
+	"fmt"
 	"github.com/alex-he8276/hack-the-stocks/pkg/config"
 	"github.com/jinzhu/gorm"
 )
@@ -32,7 +32,8 @@ func GetAllStocks() []Stock {
 
 func GetStockByTickerAndDate(ticker string, date time.Time) *Stock {
 	var stock Stock
-	_ = db.Where("Ticker = ? AND Date = ?", ticker, date).Find(&stock)
+	fmt.Println("DATE: ", date.Format("2006-01-02"))
+	_ = db.Where("ticker = ? AND CAST(date AS DATE) = ?", ticker, date.Format("2006-01-02")).Find(&stock)
 	return &stock
 }
 
